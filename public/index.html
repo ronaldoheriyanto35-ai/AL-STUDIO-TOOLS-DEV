@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AL DEV TOOLS — AL STUDIO</title>
+<style>
+:root{--bg:#080d1b;--panel:#101a31;--line:#23385d;--text:#edf4ff;--muted:#9aacca;--blue:#38bdf8;--purple:#a78bfa;--cyan:#22d3ee}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 15% 0%,#172554 0,transparent 35%),radial-gradient(circle at 90% 15%,#312e81 0,transparent 30%),var(--bg);color:var(--text);font:15px/1.5 system-ui,Arial}
+nav{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:16px 6%;background:#080d1beF;border-bottom:1px solid var(--line);backdrop-filter:blur(12px);z-index:2}
+.logo{font-weight:900;letter-spacing:1px}.logo span{color:var(--cyan)}nav a{color:var(--muted);text-decoration:none;margin-left:20px}
+main{max-width:1120px;margin:auto;padding:55px 22px}.hero{padding:30px 0 45px}.eyebrow{color:var(--cyan);font-weight:700;letter-spacing:2px}.hero h1{font-size:clamp(38px,7vw,68px);line-height:1.05;margin:12px 0;background:linear-gradient(90deg,#fff,var(--blue),var(--purple));background-clip:text;color:transparent}.hero p{max-width:680px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}.card{background:linear-gradient(145deg,#121e38,#0d1529);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 12px 35px #0003}.card h3{margin:8px 0}.card p,.muted{color:var(--muted)}button{background:linear-gradient(90deg,#2563eb,#7c3aed);border:0;border-radius:9px;padding:10px 15px;color:white;font-weight:700;cursor:pointer}input,textarea{width:100%;margin:7px 0 12px;padding:11px;border-radius:8px;border:1px solid var(--line);background:#080f20;color:var(--text)}textarea{min-height:110px}section{margin:34px 0}footer{border-top:1px solid var(--line);padding:25px;text-align:center;color:var(--muted)}
+</style></head>
+<body>
+<nav><div class="logo">AL <span>STUDIO</span></div><div><a href="#tools">Tools</a><a href="#about">About</a></div></nav>
+<main><div class="hero"><div class="eyebrow">ROBLOX DEVELOPER WORKSPACE</div><h1>AL DEV TOOLS</h1><p>Workspace praktis untuk membantu Roblox Developer mengelola aset, merapikan Luau, mencatat bug, dan menyiapkan project.</p><a href="#tools"><button>Jelajahi Tools</button></a></div>
+<section id="tools"><h2>Developer Tools</h2><div class="grid">
+<div class="card"><div>📦</div><h3>Asset Manager</h3><p>Simpan catatan ID dan nama aset di browser ini.</p><input id="assetName" placeholder="Nama aset"><input id="assetId" placeholder="Asset ID"><button onclick="addAsset()">Simpan aset</button><ul id="assets"></ul></div>
+<div class="card"><div>⌨️</div><h3>Lua Formatter</h3><p>Formatter indentasi sederhana untuk kode Luau.</p><textarea id="lua" placeholder="Tempel kode Luau di sini"></textarea><button onclick="formatLua()">Rapikan indentasi</button></div>
+<div class="card"><div>🪙</div><h3>Robux Calculator</h3><p>Simulasi estimasi setelah potongan. Ubah persentase sesuai skenario.</p><input id="robux" type="number" placeholder="Jumlah Robux" value="100"><input id="fee" type="number" placeholder="Potongan (%)" value="30"><button onclick="calc()">Hitung</button><p id="calcResult" class="muted"></p></div>
+<div class="card"><div>🐞</div><h3>Bug Tracker</h3><p>Catat bug project di browser ini.</p><input id="bug" placeholder="Deskripsi bug"><button onclick="addBug()">Tambah bug</button><ul id="bugs"></ul></div>
+<div class="card"><div>🧰</div><h3>Dev Workspace</h3><p>Daftar project lokal sederhana.</p><input id="project" placeholder="Nama project"><button onclick="addProject()">Tambah project</button><ul id="projects"></ul></div>
+<div class="card"><div>📡</div><h3>Update Tracker</h3><p>Ruang untuk mencatat rencana update game dan tools.</p><p class="muted">Fitur integrasi otomatis dapat ditambahkan pada tahap berikutnya.</p></div>
+</div></section>
+<section id="about" class="card"><h2>About AL STUDIO</h2><p>AL STUDIO adalah studio kreatif yang berfokus pada pengembangan dunia Roblox, termasuk Building, Scripting, UI Design, dan berbagai kebutuhan pengembangan game. Kami hadir untuk membantu para Roblox Developer dalam menciptakan pengalaman bermain yang kreatif, inovatif, dan berkualitas melalui solusi, tools, serta layanan pengembangan yang praktis dan bermanfaat.</p><b>AL STUDIO — Build. Create. Develop.</b></section>
+</main><footer>© AL STUDIO · Independent Roblox developer tools. Not affiliated with Roblox Corporation.</footer>
+<script>
+const store=(k,v)=>localStorage.setItem(k,JSON.stringify(v));const read=k=>JSON.parse(localStorage.getItem(k)||"[]");
+function addAsset(){let a=read("al_assets");a.push({n:assetName.value,id:assetId.value});store("al_assets",a);render("assets",a,x=>x.n+" — "+x.id);assetName.value=assetId.value=""}
+function addBug(){let a=read("al_bugs");a.push(bug.value);store("al_bugs",a);render("bugs",a,x=>x);bug.value=""}
+function addProject(){let a=read("al_projects");a.push(project.value);store("al_projects",a);render("projects",a,x=>x);project.value=""}
+function render(id,a,fn){document.getElementById(id).innerHTML=a.map(x=>"<li>"+escapeHtml(fn(x))+"</li>").join("")}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function calc(){let n=Number(robux.value),f=Number(fee.value);calcResult.textContent="Estimasi diterima: "+Math.floor(n*(1-f/100))+" Robux"}
+function formatLua(){let lines=lua.value.split("\n"),depth=0;lua.value=lines.map(line=>{let s=line.trim();if(/^(end|until|else|elseif)\b/.test(s))depth=Math.max(0,depth-1);let out="    ".repeat(depth)+s;if(/\b(then|do|function)\s*$/.test(s)||/^function\b/.test(s))depth++;return out}).join("\n")}
+render("assets",read("al_assets"),x=>x.n+" — "+x.id);render("bugs",read("al_bugs"),x=>x);render("projects",read("al_projects"),x=>x);
+</script></body></html>
